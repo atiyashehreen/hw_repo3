@@ -1,0 +1,5 @@
+1. A dataframe is two-dimensional, consisting of rows and columns.
+2. Each column of a dataframe is a vector
+3. Each column or vector contains same datatype, that is only numbers or only characters or only logicals.
+4. The number of data included in every column is same
+5. Each row of a dataframe may consist of different datatypes.
