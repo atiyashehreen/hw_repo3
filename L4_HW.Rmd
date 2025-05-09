@@ -59,9 +59,6 @@ pathway = gene_df[gene_df$pathway == "Cell Cycle" | gene_df$pathway == "Signalin
 pathway
 
 
-
-
-
 gene_df_new <- data.frame(
   gene_id = c("BRCA1", "TP53", "MYC", "EGFR", "GAPDH"),
   expression = c(8.2, 6.1, 9.5, 7.0, 10.0),
@@ -101,18 +98,7 @@ barplot(average_expression, main = "Mean Expression", col = c("salmon", "lightbl
 
 
 
-
-
-
-
-
-
-
 ```{r}
-
-
-
-
 # Making ordered factor for disease stages
 disease_stage_factor <- factor(c("Stage I", "Stage III", "Stage II", "Stage IV", "Stage I"), levels = c("Stage I", "Stage II", "Stage III", "Stage IV"), ordered = TRUE)
 
@@ -122,7 +108,6 @@ disease_stage_factor[2] > disease_stage_factor[1]
 
 barplot(table(disease_stage_factor), col= c("red", "blue", "green", "yellow"), main = "Patients in each stage", ylab = "Counts")
 ```
-
 
 
 ```{r}
