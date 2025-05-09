@@ -1,0 +1,149 @@
+---
+title: "L4_HW"
+author: "Atiya Shehreen"
+date: "2025-05-09"
+output: html_document
+---
+
+```{r}
+# Factor vs Character vector
+print("1. Factor has levels which are like categories and can be ordered whereas a character vector does not have levels.")
+print("2. Unlike character vector, a frequency and proportion table can be made from factor.")
+print("3. To make a factor, the function factor() must be used.")
+
+print("mutation_status must be a factor because the data can be divided into categories or levels such as Mutated or Wild Type")
+
+# Factor Level Order
+species <- c("Lactobacillus", "Bacteroides", "Escherichia", "Bacteroides", "Lactobacillus")
+species_factor <- factor(species, levels = c("Bacteroides", "Escherichia", "Lactobacillus"))
+print("The return is:")
+levels(species_factor)
+print("The return is such because species_factor contains these 3 categories or species of gut microbiome.")
+
+
+
+disease_severity <- factor(c("Mild", "Severe", "Moderate"), levels = c("Mild", "Moderate", "Severe", "Critical"), ordered = TRUE)
+disease_severity[1] < disease_severity[2]
+print("The result is TRUE. Because according to the input order Mild is less severe than Moderate.")
+
+
+prop <- prop.table(table(species_factor))
+prop
+Escherichia_proportion = prop["Escherichia"]
+Escherichia_proportion
+
+print("prop$Escherichia is not valid because $ operator in invalid for atomic vectors such as prop")
+```
+
+
+
+```{r}
+gene_df <- data.frame(
+  gene_id = c("BRCA1", "TP53", "MYC", "EGFR", "GAPDH"),
+  expression = c(8.2, 6.1, 9.5, 7.0, 10.0),
+  mutation = factor(c("Yes", "No", "Yes", "No", "No")),
+  pathway = c("DNA Repair", "Apoptosis", "Cell Cycle", "Signaling", "Metabolism")
+)
+
+gene_df
+
+subset <- gene_df[gene_df$expression > 7 & gene_df$mutation == "No", ]
+subset
+print("This query selects genes with gene expression value greater than 7 which did not undergo mutation. In this case, GAPDH gene was selected.")
+
+
+expression = gene_df[gene_df$expression >8, ]
+expression
+
+pathway = gene_df[gene_df$pathway == "Cell Cycle" | gene_df$pathway == "Signaling", ]
+pathway
+
+
+
+
+
+gene_df_new <- data.frame(
+  gene_id = c("BRCA1", "TP53", "MYC", "EGFR", "GAPDH"),
+  expression = c(8.2, 6.1, 9.5, 7.0, 10.0),
+  mutation = factor(c("Yes", "No", "Yes", "No", "No")),
+  pathway = c("DNA Repair", "Apoptosis", "Cell Cycle", "Signaling", "Metabolism"),
+  type = factor(c("Tumor Suppressor", "Tumor Suppressor", "Oncogene", "Oncogene", "Housekeeping")))
+
+gene_df_new
+
+# Subsetting
+oncogene = gene_df_new[gene_df_new$type == "Oncogene" & gene_df_new$expression > 8, ]
+oncogene
+
+
+# Changing Reference Level
+
+gene_type_relevel = relevel(factor(c("Tumor Suppressor", "Tumor Suppressor", "Oncogene", "Oncogene", "Housekeeping")), levels = c("Tumor Suppressor", "Oncogene", "Housekeeping gene"), ref = "Oncogene")
+gene_type_relevel
+
+```
+
+```{r}
+sample_expression <- data.frame(
+  samples <- c("WT", "KO", "WT", "KO", "WT"),
+expression <- c(5.2, 8.1, 4.3, 9.0, 5.7)
+)
+sample_expression
+
+group_factor <- factor(c("WT", "KO", "WT", "KO", "WT"), levels = c("WT", "KO"))
+group_factor
+
+average_expression = tapply(expression, group_factor, mean)
+average_expression
+
+barplot(average_expression, main = "Mean Expression", col = c("salmon", "lightblue"), ylab = "Average Expression Value", xlab = "Samples")
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+
+
+
+
+# Making ordered factor for disease stages
+disease_stage_factor <- factor(c("Stage I", "Stage III", "Stage II", "Stage IV", "Stage I"), levels = c("Stage I", "Stage II", "Stage III", "Stage IV"), ordered = TRUE)
+
+disease_stage_factor
+
+disease_stage_factor[2] > disease_stage_factor[1]
+
+barplot(table(disease_stage_factor), col= c("red", "blue", "green", "yellow"), main = "Patients in each stage", ylab = "Counts")
+```
+
+
+
+```{r}
+
+gene_expr <- rnorm(30, mean = 8, sd = 2)
+tissue <- rep(c("brain", "liver", "kidney"), each = 10)
+tissue_factor <- factor(tissue, levels = c("liver", "brain", "kidney"))
+
+# Making a Boxplot
+boxplot(gene_expr ~ tissue_factor, 
+        col = "lightblue",
+        main = "Gene Expression by tissue", 
+        xlab = "Type of Tissue", 
+        ylab = "Expression Level")
+
+
+# Checking Variability
+
+gene_variabilty = tapply(gene_expr, tissue_factor, sd)
+gene_variability
+print("Brain shows most variability in gene expression.")
+```
+
+
