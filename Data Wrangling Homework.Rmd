@@ -1,0 +1,123 @@
+---
+title: "Data wrangling homework"
+author: "Atiya Shehreen"
+date: "2025-07-11"
+output: html_document
+---
+
+
+## Matrix Operation
+```{r}
+### Creating a Gene Expression Matrix
+
+gene_expr_matrix <- matrix(
+  c(2.6, 7.8, 9.4, 4.5,
+    3.4, 5.7, 8.9, 7.0,
+    11.3, 2.4, 5.5, 7.9,
+    3.4, 13.7, 8.4, 8.9,
+    2.4, 5.3, 6.5, 11.5,
+    12.4, 5.7, 7.8, 9.9,
+    11, 19.1, 7, 9.7,
+    2.9, 8.7, 6.7, 8.4),
+  nrow = 8, byrow = TRUE
+)
+rownames(gene_expr_matrix) <- paste0("Gene_", 1:8)
+colnames(gene_expr_matrix) <- paste0("Condition_", 1:4)
+
+gene_expr_matrix
+
+### Calculating Mean Expression
+
+Mean_expression_per_gene <- rowMeans(gene_expr_matrix)
+Mean_expression_per_gene
+
+
+### Calculating Fold Change
+
+expression_condition4 <- gene_expr_matrix[, "Condition_4"]
+expression_condition1 <- gene_expr_matrix[, "Condition_1"]
+
+fold_change_C4_vs_C1 <- expression_condition4 / expression_condition1
+
+
+print(fold_change_C4_vs_C1)
+
+
+### Generating heatmap
+
+heatmap(gene_expr_matrix, main= "Heatmap of Gene Expression", Rowv = NA, Colv = NA, labRow= rownames(gene_expr_matrix), labCol= colnames(gene_expr_matrix), col=heat.colors(256) )
+```
+
+
+
+
+## Factor Analysis
+```{r}
+### Making an ordered factor
+print(iris)
+
+iris_ordered_species <- factor(iris$Species, levels = c("setosa", "versicolor", "virginica", ordered = TRUE))
+iris_ordered_species
+
+
+
+### Creating boxplot
+boxplot(Sepal.Length ~ Species, data = iris,
+        main = "Sepal Length Distribution by Species",
+        xlab = "Species",
+        ylab = "Sepal Length (cm)",
+        col = c("lightblue", "lightgreen", "lightyellow"),
+        border = "darkblue",
+        outline = TRUE)
+
+### Calculating Mean Petal Length
+mean_petal_length <- aggregate(Petal.Length ~ Species, data = iris, FUN = mean)
+mean_petal_length
+```
+
+
+
+## Data Cleaning Challenge
+```{r}
+### Downloading msleep dataset
+
+download.file("https://github.com/genomicsclass/dagdata/raw/master/inst/extdata/msleep_ggplot2.csv",
+              destfile = "msleep_data.csv")
+
+msleep <- read.csv("msleep_data.csv")
+
+### Finding Missing Values
+
+is.na(msleep)
+colSums(is.na(msleep))
+
+print("Columns with missing values: vore, conservation, sleep_rem, sleep_cycle, brainwt")
+
+
+### Replacing missing values
+
+msleep$sleep_rem[is.na(msleep$sleep_rem)] <- mean(msleep$sleep_rem, na.rm = TRUE)
+msleep$sleep_total[is.na(msleep$sleep_total)] <- mean(msleep$sleep_total, na.rm = TRUE)
+msleep$brainwt[is.na(msleep$brainwt)] <- mean(msleep$brainwt, na.rm = TRUE)
+
+msleep
+
+
+### Adding a new variable titled Sleep Duration
+msleep$sleep_duration <- NA
+
+
+for (i in 1:nrow(msleep)) {
+  if (msleep$sleep_total[i] > 10) {
+    msleep$sleep_duration[i] <- "Long"
+  } else if (msleep$sleep_total[i] > 5) {
+    msleep$sleep_duration[i] <- "Medium"
+  } else {
+    msleep$sleep_duration[i] <- "Short"
+  }
+}
+
+
+msleep
+```
+
